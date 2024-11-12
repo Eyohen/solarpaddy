@@ -21,17 +21,20 @@ const Home = () => {
            <div className='w-full h-[600px]'>
    <div className='relative'>
     <img src={hero} className='object-cover w-full h-[600px]'/>
-    <p className='absolute text-6xl font-semibold text-white z-50 top-[220px] px-24'>Powering Access to</p>
-    <p className='absolute text-6xl font-semibold text-white z-50 top-[300px] px-24'>Brighter Lives Through</p>
-    <p className='absolute text-6xl font-semibold text-white z-50 top-[380px] px-24'>Off-Grid Solar</p>
-    <div className='px-24'><button className='absolute z-50 bg-[#FDDA0D] top-[470px] px-6 py-2 rounded-xl shadow-lg'>Read More</button></div>
+    <p className='absolute text-7xl font-semibold text-white z-50 top-[220px] px-24'>Welcome to Solar Paddy</p>
+    <p className='absolute text-3xl font-medium text-white z-50 top-[300px] px-24'>Your gateway to a brighter, more reliable
+    </p>
+    <p className='absolute text-3xl font-medium text-white z-50 top-[350px] px-24'>and cost-effective energy solution.
+    </p>
+   
+    <div className='px-24'><button className='absolute z-50 bg-[#FDDA0D] top-[420px] px-6 py-2 rounded-xl shadow-lg'>Read More</button></div>
     </div>
 </div>
 
 {/* our partners */}
 <div>
 
-<p className='text-center font-semibold text-4xl pt-12'>Our Partners</p>
+<p className='text-center font-semibold text-4xl pt-12'>Trusted By</p>
 
 <div className='flex justify-center gap-x-4 items-center'>
 

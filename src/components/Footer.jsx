@@ -1,6 +1,7 @@
 import React from 'react'
 import { CiLocationOn } from "react-icons/ci";
 import { CiMail } from "react-icons/ci";
+import { IoCallOutline } from "react-icons/io5";
 
 
 
@@ -15,13 +16,19 @@ const Footer = () => {
 
         <div className='flex items-center gap-x-2 mt-9'>
         <CiLocationOn color='white' size={23} />
-        <p className='text-white'>Adekunle Fajuyi way, GRA Ikeja, Lagos.</p>
+        <p className='text-white'>7 Ibiyinka
+        Olorunbe, VI, Lagos.</p>
+        </div>
+
+        <div className='flex items-center gap-x-2 mt-9'>
+        <IoCallOutline color='white' size={23} />
+        <p className='text-white'>08033621415</p>
         </div>
 
 
         <div className='flex items-center gap-x-2 mt-9'>
         <CiMail color='white' size={23} />
-        <p className='text-white'>hello@solarpaddy.com</p>
+        <p className='text-white'>powerup@solarpaddy.com</p>
         </div>
 
 
