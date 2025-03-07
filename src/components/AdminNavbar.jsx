@@ -8,7 +8,10 @@ const AdminNavbar = () => {
   const navItems = [
     { path: '/dashboard', label: 'Dashboard' },
     { path: '/orders', label: 'Orders' },
-    { path: '/billing', label: 'Billing' }
+    { path: '/billing', label: 'Billing' },
+    { path: '/purchases', label: 'Purchases' },
+    { path: '/producttable', label: 'Products' },
+    { path: '/enquirytable', label: 'Enquiries' }
   ];
 
   const isActive = (path) => {

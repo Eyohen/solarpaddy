@@ -1,25 +1,103 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Star, Minus, Plus, ShoppingCart } from 'lucide-react'
 // import { Button } from "@/components/ui/button"
 // import { Textarea } from "@/components/ui/textarea"
 // import { Input } from "@/components/ui/input"
 import panel from '../assets/panel.jpg'
+import { Link, useNavigate, useParams } from 'react-router-dom'
+import { URL } from '../url'
+import axios from 'axios'
+import { useAuth } from '../context/AuthContext'
+import Navbar from '../components/Navbar'
 
 export default function ProductDetails() {
+  const { user } = useAuth()
   const [quantity, setQuantity] = useState(1)
+  const {id: productId} = useParams();
+  const [product, setProduct] = useState([]);
+
+  const navigate = useNavigate()
+
+  const [isLoading, setIsLoading] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [rating, setRating] = useState(0)
+  const [comment, setComment] = useState('')
+  const [message, setMessage] = useState('')
+const [hoveredProduct, setHoveredProduct] = useState(null)
+
+const fetchProduct = async () => {
+  const res = await axios.get(`${URL}/api/products/${productId}`)
+  setProduct(res.data)
+}
+
+useEffect(() => {
+fetchProduct()
+},[productId])
 
   const handleQuantityChange = (amount) => {
     setQuantity(prev => Math.max(1, prev + amount))
   }
 
+  const handleBuyNow = async () => {
+    setIsSubmitting(true)
+    try {
+      await axios.post(`${URL}/api/cart/create`, {
+        quantity,
+        productId: product.id,
+        title: product.title,
+        description: product.description,
+        imageUrl: product.imageUrl,
+        size: product.size,
+        weight: product.weight,
+        email: user?.email,
+        fname: user?.fname,
+        userId: user?.id,
+      })
+      navigate('/cart')
+      // toast.success('Purchase successful')
+    } catch (error) {
+      console.error('Error creating purchase', error)
+      // toast.error('Failed to complete purchase')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  const handleReview = async () => {
+    try {
+      await axios.post(`${URL}/api/reviews/${productId}`, {
+        userId: user?.id,
+        rating,
+        comment,
+        productId
+      })
+      // toast.success('Review submitted successfully!')
+      setRating(0)
+      setComment('')
+      setMessage('Review submitted successfully!')
+    } catch (error) {
+      setMessage('You need to purchase this product to review it.')
+      // toast.error('Failed to submit review')
+    }
+  }
+
+  // if (isLoading) {
+  //   return <div className="flex justify-center items-center h-screen">Loading...</div>
+  // }
+
+
   return (
+    <>
+      <Navbar/>
+    
+
     <div className="container mx-auto px-4 py-8">
       <div className="grid md:grid-cols-2 gap-8">
         <div className="space-y-4">
           <img
-            src={panel}
+            src={product.imageUrl}
             alt="Solar Panel"
-            className="w-[400px] rounded-lg shadow-lg"
+            className="w-[600px] rounded-lg shadow-lg"
           />
           <div className="grid grid-cols-4 gap-2">
             {[1, 2, 3, 4].map((i) => (
@@ -33,8 +111,8 @@ export default function ProductDetails() {
           </div>
         </div>
         <div className="space-y-6">
-          <h1 className="text-3xl font-bold">High-Efficiency Monocrystalline Solar Panel</h1>
-          <p className="text-xl font-semibold text-green-600">$299.99</p>
+          <h1 className="text-3xl font-bold">{product.title}</h1>
+          <p className="text-xl font-semibold text-green-600">₦{product.price}</p>
           <div className="flex items-center space-x-2">
             {[1, 2, 3, 4, 5].map((star) => (
               <Star key={star} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
@@ -43,9 +121,7 @@ export default function ProductDetails() {
           </div>
           <p className="text-gray-600">Brand: SolarTech Solutions</p>
           <p className="text-gray-700">
-            Our high-efficiency monocrystalline solar panel is designed to maximize energy production
-            in both residential and commercial settings. With advanced cell technology and robust
-            construction, this panel offers superior performance and durability in all weather conditions.
+           {product.description}
           </p>
           <div className="flex items-center space-x-4">
             <span className="font-semibold">Quantity:</span>
@@ -69,9 +145,12 @@ export default function ProductDetails() {
               </button>
             </div>
           </div>
-          <p><span className="font-semibold">Weight:</span> 18.5 kg (40.8 lbs)</p>
-          <button className="w-full bg-black text-white font-semibold py-2 rounded-md">
-        Add to Cart
+          <p><span className="font-semibold">Weight:</span> {product.weight} kg</p>
+          <button className="w-full bg-black text-white font-semibold py-2 rounded-md"
+          onClick={handleBuyNow}
+          disabled={isSubmitting}
+          >
+        {isSubmitting ? 'Processing ... ' : 'Add to Cart'}
           </button>
         </div>
       </div>
@@ -124,5 +203,6 @@ export default function ProductDetails() {
         </div>
       </div>
     </div>
+    </>
   )
 }

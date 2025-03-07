@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useContext, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { 
   RiUserLine, 
   RiMailLine, 
@@ -12,115 +12,68 @@ import {
 } from 'react-icons/ri';
 import axios from 'axios';
 import { URL } from '../url';
-import { useNavigate } from 'react-router-dom';
+
 
 const Register = () => {
-    const [formData, setFormData] = useState({
-        firstName: '',
-        lastName: '',
-        email: '',
-        phone: '',
-        password: '',
-        city: '',
-        state: '',
-        country: '',
-      });
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
+  const [phone, setPhone] = useState('')
+  const [email, setEmail] = useState('')
+  const [address, setAddress] = useState('')
+  const [selectedLga, setSelectedLGA] = useState('')
+  const [state, setState] = useState('')
+  const [country, setCountry] = useState('')
+  const [lgarea, setLGArea] = useState([])
+  const [error, setError] = useState(false)
+  const [password, setPassword] = useState('')
+  const [errors, setErrors] = useState({});
+  const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+      const fetchLGA = async () => {
+        const res = await axios.get(`${URL}/api/deliveryrates`)
+        console.log("delivery rates", res.data)
+        setLGArea(res.data)
+      }
     
-      const [errors, setErrors] = useState({});
-      const [showPassword, setShowPassword] = useState(false);
-      const [isLoading, setIsLoading] = useState(false);
-    
-      const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({
-          ...prev,
-          [name]: value
-        }));
-        // Clear error when user starts typing
-        if (errors[name]) {
-          setErrors(prev => ({
-            ...prev,
-            [name]: ''
-          }));
+      useEffect(() => {
+        fetchLGA()
+      }, [])
+
+      const handleLGA = (e) => {
+        const value = e.target.value;
+        if(value !== ''){ // Only update if  valid option is selected
+        setSelectedLGA(value)
         }
-      };
+      }
+
+      const handleSubmit = async (e) => {
+        e.preventDefault()
+        setIsLoading(true)
+        try {
+          const res = await axios.post(URL + "/api/auth/register", {firstName, lastName, email, phone, password, lga:selectedLga, address, state, country })
     
-      const validateForm = () => {
-        const newErrors = {};
+          // const { accessToken, user } = res.data;
     
-        // First Name validation
-        if (!formData.firstName.trim()) {
-          newErrors.firstName = 'First name is required';
+          if (res.status == 200) {
+            // localStorage.setItem("access_token", accessToken)
+            // login(user)
+            setIsLoading(false)
+            console.log(res.data)
+            navigate("/login")
+          }
+    
         }
-    
-        // Last Name validation
-        if (!formData.lastName.trim()) {
-          newErrors.lastName = 'Last name is required';
+        catch (err) {
+          console.log(err)
+        } finally {
+          setIsLoading(false)
         }
-    
-        // Email validation
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!formData.email.trim()) {
-          newErrors.email = 'Email is required';
-        } else if (!emailRegex.test(formData.email)) {
-          newErrors.email = 'Please enter a valid email';
-        }
-    
-        // Phone validation
-        const phoneRegex = /^\+?[\d\s-]{10,}$/;
-        if (!formData.phone.trim()) {
-          newErrors.phone = 'Phone number is required';
-        } else if (!phoneRegex.test(formData.phone)) {
-          newErrors.phone = 'Please enter a valid phone number';
-        }
-    
-        // Password validation
-        if (!formData.password) {
-          newErrors.password = 'Password is required';
-        } else if (formData.password.length < 8) {
-          newErrors.password = 'Password must be at least 8 characters';
-        }
-    
-        // Location validations
-        if (!formData.city.trim()) newErrors.city = 'City is required';
-        if (!formData.state.trim()) newErrors.state = 'State is required';
-        if (!formData.country.trim()) newErrors.country = 'Country is required';
-    
-        setErrors(newErrors);
-        return Object.keys(newErrors).length === 0;
-      };
-    
+      }
 
       const navigate = useNavigate()
 
-
-      const handleSubmit = async (e) => {
-        e.preventDefault();
-        
-        // if (!validateForm()) return;
     
-        setIsLoading(true);
-        try {
-          
-         const res = await axios.post(`${URL}/api/auth/register`, formData);
-          console.log('Form submitted:', formData);
-          
-          if (res.status === 200){
-          // Handle successful registration
-          alert('Registration successful!');
-          navigate('/login')
-          }
-        } catch (error) {
-          console.error('Registration error:', error);
-          setErrors(prev => ({
-            ...prev,
-            submit: 'Registration failed. Please try again.'
-          }));
-        } finally {
-          setIsLoading(false);
-        }
-      };
-
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
@@ -153,9 +106,8 @@ const Register = () => {
                      type="text"
                      name="firstName"
                      id="firstName"
-                     autoComplete="given-name"
-                     value={formData.firstName}
-                     onChange={handleChange}
+                     placeholder='First Name'
+                     onChange={(e) => setFirstName(e.target.value)}
                      className={`block w-full pl-10 pr-3 py-2 border ${
                        errors.firstName ? 'border-red-300' : 'border-gray-300'
                      } rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500`}
@@ -179,9 +131,7 @@ const Register = () => {
                      type="text"
                      name="lastName"
                      id="lastName"
-                     autoComplete="family-name"
-                     value={formData.lastName}
-                     onChange={handleChange}
+                     onChange={(e) => setLastName(e.target.value)}
                      className={`block w-full pl-10 pr-3 py-2 border ${
                        errors.lastName ? 'border-red-300' : 'border-gray-300'
                      } rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500`}
@@ -206,9 +156,7 @@ const Register = () => {
                    type="email"
                    name="email"
                    id="email"
-                   autoComplete="email"
-                   value={formData.email}
-                   onChange={handleChange}
+                   onChange={(e) => setEmail(e.target.value)}
                    className={`block w-full pl-10 pr-3 py-2 border ${
                      errors.email ? 'border-red-300' : 'border-gray-300'
                    } rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500`}
@@ -232,9 +180,9 @@ const Register = () => {
                    type="tel"
                    name="phone"
                    id="phone"
-                   autoComplete="tel"
-                   value={formData.phone}
-                   onChange={handleChange}
+                
+            
+                   onChange={(e) => setPhone(e.target.value)}
                    className={`block w-full pl-10 pr-3 py-2 border ${
                      errors.phone ? 'border-red-300' : 'border-gray-300'
                    } rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500`}
@@ -245,8 +193,8 @@ const Register = () => {
                )}
              </div>
 
-             {/* Password */}
-             <div>
+                {/* Password */}
+                <div>
                <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                  Password
                </label>
@@ -257,9 +205,8 @@ const Register = () => {
                  <input
                    type={showPassword ? "text" : "password"}
                    name="password"
-                   id="password"
-                   value={formData.password}
-                   onChange={handleChange}
+                   id="password"     
+                   onChange={(e) => setPassword(e.target.value)}
                    className={`block w-full pl-10 pr-10 py-2 border ${
                      errors.password ? 'border-red-300' : 'border-gray-300'
                    } rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500`}
@@ -281,32 +228,54 @@ const Register = () => {
                )}
              </div>
 
-             {/* Location Fields */}
-             <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-               {/* City */}
-               <div>
-                 <label htmlFor="city" className="block text-sm font-medium text-gray-700">
-                   City
+                {/* Address */}
+                <div>
+                 <label htmlFor="state" className="block text-sm font-medium text-gray-700">
+                   Address
                  </label>
                  <div className="mt-1 relative rounded-md shadow-sm">
-                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center">
-                     <RiMapPinLine className="h-5 w-5 text-gray-400" />
-                   </div>
-                   <input
+                  
+                   <textarea
                      type="text"
-                     name="city"
-                     id="city"
-                     value={formData.city}
-                     onChange={handleChange}
-                     className={`block w-full pl-10 pr-3 py-2 border ${
-                       errors.city ? 'border-red-300' : 'border-gray-300'
+                     name="address"
+                     id="address"
+               
+                     onChange={(e) => setAddress(e.target.value)}
+                     className={`block w-full pl-3 pr-3 py-2 border ${
+                       errors.state ? 'border-red-300' : 'border-gray-300'
                      } rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500`}
                    />
                  </div>
-                 {errors.city && (
-                   <p className="mt-1 text-sm text-red-600">{errors.city}</p>
+                 {errors.state && (
+                   <p className="mt-1 text-sm text-red-600">{errors.state}</p>
                  )}
                </div>
+
+
+            {/* town */}
+             <div>
+               <label htmlFor="lga" className="block text-sm font-medium text-gray-700">
+                 Town
+               </label>
+             <select
+                   value={selectedLga}
+                  onChange={handleLGA}
+                  className={`block w-full pl-2 pr-3 py-2 border ${
+                    errors.email ? 'border-red-300' : 'border-gray-300'
+                  } rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500`}
+                    >
+                      <option value="" disabled>Select a town</option>
+                    {lgarea?.map((item) => (
+                  <option key={item.id} value={item.lga}>
+                    {item.lga}
+                </option>
+              ))}
+            </select>
+            </div>        
+
+             {/* Location Fields */}
+             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+             
 
                {/* State */}
                <div>
@@ -321,8 +290,8 @@ const Register = () => {
                      type="text"
                      name="state"
                      id="state"
-                     value={formData.state}
-                     onChange={handleChange}
+               
+                     onChange={(e) => setState(e.target.value)}
                      className={`block w-full pl-10 pr-3 py-2 border ${
                        errors.state ? 'border-red-300' : 'border-gray-300'
                      } rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500`}
@@ -346,8 +315,7 @@ const Register = () => {
                      type="text"
                      name="country"
                      id="country"
-                     value={formData.country}
-                     onChange={handleChange}
+                     onChange={(e) => setCountry(e.target.value)}
                      className={`block w-full pl-10 pr-3 py-2 border ${
                        errors.country ? 'border-red-300' : 'border-gray-300'
                      } rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500`}
@@ -364,6 +332,7 @@ const Register = () => {
               <button
                 type="submit"
                 disabled={isLoading}
+              
                 className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-500 hover:bg-[#4F7942] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${
                   isLoading ? 'opacity-50 cursor-not-allowed' : ''
                 }`}
@@ -391,11 +360,8 @@ const Register = () => {
               By creating an account, you agree to our{' '}
               <Link to="/terms" className="font-medium text-blue-600 hover:text-blue-500">
                 Terms of Service
-              </Link>{' '}
-              and{' '}
-              <Link to="/privacy" className="font-medium text-blue-600 hover:text-blue-500">
-                Privacy Policy
               </Link>
+            
             </div>
           </form>
 
