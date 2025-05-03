@@ -129,8 +129,12 @@ import FAQ from '../components/FAQ';
 import Footer from '../components/Footer';
 import selectappliance from '../assets/selectappliances.jpg'
 import calculateload from '../assets/calculateload.jpg'
+import { useNavigate } from 'react-router-dom';
+
 
 const Home = () => {
+
+  const navigate = useNavigate();
   return (
     <>
       <Navbar/>
@@ -141,13 +145,13 @@ const Home = () => {
           <div className='absolute inset-0 bg-black/50 z-10'></div>
           <div className='absolute z-20 top-1/2 transform -translate-y-1/2 px-4 md:px-12 lg:px-24'>
             <h1 className='text-3xl md:text-5xl lg:text-7xl font-semibold text-white mb-4'>
-              Welcome to Solar Paddy
+              Harness the sun, Empower your world.
             </h1>
             <p className='text-xl md:text-2xl lg:text-3xl font-medium text-white mb-2'>
-              Your gateway to a brighter, more reliable
+            Must-Have Items on a Solar Power Equipment Selling Website
             </p>
             <p className='text-xl md:text-2xl lg:text-3xl font-medium text-white mb-6'>
-              and cost-effective energy solution.
+              
             </p>
             <button className='bg-[#FDDA0D] px-6 py-2 rounded-xl shadow-lg hover:bg-[#e5c40c] transition-colors'>
               Read More
@@ -180,9 +184,9 @@ const Home = () => {
                 We are bringing alternative power to your doorstep
               </p>
               <p className='text-white text-base lg:text-lg mb-6'>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+              At Solar Paddy, we are passionate about powering the future with clean, reliable, and sustainable energy. As a trusted provider of high-quality solar power equipment, we specialize in offering innovative solutions that meet the energy needs of homes, businesses, and communities.
               </p>
-              <button className='bg-[#FDDA0D] px-6 py-2 rounded-xl shadow-lg hover:bg-[#e5c40c] transition-colors'>
+              <button onClick={() =>navigate('/about')} className='bg-[#FDDA0D] px-6 py-2 rounded-xl shadow-lg hover:bg-[#e5c40c] transition-colors'>
                 See More
               </button>
             </div>

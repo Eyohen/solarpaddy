@@ -21,7 +21,7 @@ export const CreateTown= () => {
         lga: formData.lga,
         deliveryCharge: Number(formData.deliveryCharge)
       });
-      navigate('/lga');
+      navigate('/dashboard');
     } catch (error) {
       console.error('Error creating LGA:', error);
     } finally {

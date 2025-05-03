@@ -25,6 +25,7 @@ import EnquiryTable from './pages/EnquiryTable'
 import ViewEnquiry from './pages/ViewEnquiry'
 import SendEstimate from './pages/SendEstimate'
 import TermsAndConditions from './pages/TermsAndConditions'
+import About from './pages/About'
 
 
 const App = () => {
@@ -38,6 +39,7 @@ const App = () => {
 <Route exact path="/products" element={<Products/>}/>
 <Route exact path="/productdetails/:id" element={<ProductDetails/>}/>
 <Route exact path="/cart" element={<Cart/>}/>
+<Route exact path="/about" element={<About/>}/>
 <Route exact path="/checkout" element={<SolarCheckout/>}/>
 <Route exact path="/dashboard" element={<Dashboard/>}/>
 <Route exact path="/orders" element={<Order/>}/>

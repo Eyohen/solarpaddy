@@ -45,7 +45,9 @@ const Login = () => {
     setIsLoading(true);
     try {
       // Add your login API call here
-    const res = await axios.post(`${URL}/api/auth/login`, formData);
+    const res = await axios.post(`${URL}/api/auth/login`, formData,  {
+      timeout: 50000, 
+    });
 
     const {accessToken, user} = res.data;
 
