@@ -2,6 +2,7 @@ import React from 'react'
 import { Route, Routes } from 'react-router-dom'
 import Home from './pages/Home'
 import Calculator from './pages/Calculator'
+import Contact from './pages/Contact'
 import SolarCheckout from './pages/SolarCheckout'
 import Products from './pages/Products'
 import ProductDetails from './pages/ProductDetails'
@@ -37,6 +38,7 @@ const App = () => {
 <Route exact path="/admin" element={<Admin/>}/>
 <Route exact path="/calculator" element={<Calculator/>}/>
 <Route exact path="/products" element={<Products/>}/>
+<Route exact path="/contact" element={<Contact/>}/>
 <Route exact path="/productdetails/:id" element={<ProductDetails/>}/>
 <Route exact path="/cart" element={<Cart/>}/>
 <Route exact path="/about" element={<About/>}/>

@@ -1,25 +1,3 @@
-// import React from 'react'
-// import Navbar from "../components/Navbar"
-
-// const About = () => {
-//   return (
-//     <div>
-//         <Navbar/>
-//         About Us
-// At Solar Paddy, we are passionate about powering the future with clean, reliable, and sustainable energy. As a trusted provider of high-quality solar power equipment, we specialize in offering innovative solutions that meet the energy needs of homes, businesses, and communities.
-// Founded with a mission to promote energy independence and environmental sustainability, Solar Paddy has grown into a go-to destination for top-tier solar panels, inverters, batteries, and accessories. We partner with leading manufacturers to ensure every product we offer meets the highest standards of efficiency and durability.
-// Our team is dedicated to guiding customers through every step of their solar journey — from product selection to installation support and after-sales service. Whether you're looking to reduce
-// your electricity bills, embrace off-grid living, or invest in a greener tomorrow, Solar Paddy is here to help you make it happen.
-// Join us in building a brighter, cleaner future — one panel at a time.
-//     </div>
-//   )
-// }
-
-// export default About
-
-
-
-
 import React from 'react';
 import Navbar from "../components/Navbar";
 import { Sun, Battery, Leaf, Users, Award, Zap } from 'lucide-react';
